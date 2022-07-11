@@ -3,7 +3,7 @@ p {
 }
 
 .box-hidden {
-  opacity: 0;
+  visibility: hidden;
 }
 
 .box-loading {

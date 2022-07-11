@@ -10,11 +10,9 @@ import { InViewService } from '../services/in-view.service';
   selector: '[inView]'
 })
 export class InViewDirective implements AfterViewInit, OnDestroy {
-  @Input('inViewId') inViewId = 'appUniqueId';
   @Output() inViewStatusChanged = new EventEmitter<boolean>();
 
   private destroyed$ = new Subject<void>();
-  private config: IntersectionObserverInit = {};
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -24,7 +22,7 @@ export class InViewDirective implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.inViewService.registerTarget(this.elementRef.nativeElement, this.config, this.inViewId);
+      this.inViewService.registerTarget(this.elementRef.nativeElement);
       this.inViewService.trigger$.pipe(
         takeUntil(this.destroyed$),
         filter((entry) => entry && entry.target === this.elementRef.nativeElement)
@@ -44,7 +42,7 @@ export class InViewDirective implements AfterViewInit, OnDestroy {
     this.destroyed$.complete();
 
     if (isPlatformBrowser(this.platformId)) {
-      this.inViewService.unregisterTarget(this.elementRef.nativeElement, this.inViewId);
+      this.inViewService.unregisterTarget(this.elementRef.nativeElement);
     }
   }
 

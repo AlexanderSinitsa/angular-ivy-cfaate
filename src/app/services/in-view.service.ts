@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 
@@ -7,11 +7,11 @@ export class InViewService {
   private triggerSubject = new Subject<IntersectionObserverEntry>();
   public trigger$ = this.triggerSubject.asObservable()
 
-  private targets: { [key: string]: Element } = {};
+  private targets = new Set<Element>();
   private intersectionObserver: IntersectionObserver;
 
 
-  registerTarget(target: Element, config: IntersectionObserverInit, inViewId: string) {
+  registerTarget(target: Element) {
     if (!this.intersectionObserver) {
       this.intersectionObserver = new IntersectionObserver(
         (entries) => {
@@ -19,21 +19,21 @@ export class InViewService {
             entries.forEach((entry) => this.triggerSubject.next(entry));
           }
         },
-        config
+        {}
       )
     }
 
-    if (!this.targets[inViewId]) {
-      this.targets[inViewId] = target;
+    if (!this.targets.has(target)) {
+      this.targets.add(target);
       this.intersectionObserver.observe(target);
     }
   }
 
-  unregisterTarget(target: Element, inViewId: string) {
-    if (this.targets[inViewId]) {
+  unregisterTarget(target: Element) {
+    if (this.targets.has(target)) {
       this.intersectionObserver.unobserve(target);
 
-      delete this.targets[inViewId];
+      this.targets.delete(target);
     }
   }
 

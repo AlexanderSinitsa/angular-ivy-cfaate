@@ -11,6 +11,6 @@ export class BoxComponent implements OnInit {
   @Input() id: number;
 
   ngOnInit() {
-    console.log('Box componet init', this.id);
+    console.log('Box component init', this.id);
   }
 }

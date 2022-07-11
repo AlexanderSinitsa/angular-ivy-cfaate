@@ -1,11 +1,10 @@
 <box
+  *ngFor="let box of boxes"
   class="box"
-  *ngFor="let box of boxes; let i = index"
-  [class.box-hidden]="boxesVisibilityState[i] === BoxStateEnum.Empty"
-  [class.box-loading]="boxesVisibilityState[i] === BoxStateEnum.Loading"
+  [class.box-hidden]="!boxesVisibilityState[box?.id] || boxesVisibilityState[box?.id] === BoxStateEnum.Empty"
+  [class.box-loading]="boxesVisibilityState[box?.id] === BoxStateEnum.Loading"
   [text]="box?.text || 'TODO'"
   [id]="box?.id"
   inView
-  [inViewId]="'boxList_'+ box?.id"
-  (inViewStatusChanged)="fetchBoxContent($event, i)"
+  (inViewStatusChanged)="fetchBoxContent($event, box?.id)"
 ></box>
